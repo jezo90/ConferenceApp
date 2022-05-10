@@ -14,25 +14,26 @@ import java.util.Optional;
 @RequiredArgsConstructor
 class UserAdapter implements UserRepository {
     private final UserSpringRepository userSpringRepository;
+    private final UserEntityMapper userEntityMapper = new UserEntityMapper();
 
     @Override
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
 
-        return UserEntityMapper.map(
+        return userEntityMapper.map(
                 userSpringRepository.save(
-                UserEntityMapper.map(userRequestDto)));
+                        userEntityMapper.map(userRequestDto)));
     }
 
     @Override
     public Optional<UserDto> findByUsername(String username) {
         return userSpringRepository.findByUsername(username)
-                .map(UserEntityMapper::mapToDto);
+                .map(userEntityMapper::mapToDto);
     }
 
     @Override
     public UserResponseDto changeNickname(UserChangeRequestDto userChangeRequestDto) {
-        return UserEntityMapper.map(
+        return userEntityMapper.map(
                 userSpringRepository.save(
-                UserEntityMapper.map(userChangeRequestDto)));
+                        userEntityMapper.map(userChangeRequestDto)));
     }
 }

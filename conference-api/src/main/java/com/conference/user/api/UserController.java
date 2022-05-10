@@ -15,20 +15,21 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserComponent userComponent;
+    private final UserMapper userMapper = new UserMapper();
 
     @PostMapping("/add")
     ResponseEntity<UserResponse> add(@RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(
-                UserMapper.map(
+                userMapper.map(
                         userComponent.saveUser(
-                                UserMapper.map(userRequest))));
+                                userMapper.map(userRequest))));
     }
 
     @PutMapping("/update")
     ResponseEntity<UserResponse> add(@RequestBody UserChangeRequest userChangeRequest) {
         return ResponseEntity.ok(
-                UserMapper.map(
+                userMapper.map(
                         userComponent.changeNickname(
-                                UserMapper.map(userChangeRequest))));
+                                userMapper.map(userChangeRequest))));
     }
 }

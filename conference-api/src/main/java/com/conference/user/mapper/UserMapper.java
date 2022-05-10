@@ -8,14 +8,14 @@ import com.conference.user.model.UserRequest;
 import com.conference.user.model.UserResponse;
 
 public class UserMapper {
-    public static UserRequestDto map(UserRequest userRequest)
+    public UserRequestDto map(UserRequest userRequest)
     {
         return new UserRequestDto(
                 userRequest.username(),
                 userRequest.email());
     }
 
-    public static UserResponse map(UserResponseDto userResponseDto)
+    public UserResponse map(UserResponseDto userResponseDto)
     {
         return new UserResponse(
                 userResponseDto.id(),
@@ -24,7 +24,7 @@ public class UserMapper {
         );
     }
 
-    public static UserChangeRequestDto map(UserChangeRequest userChangeRequest)
+    public UserChangeRequestDto map(UserChangeRequest userChangeRequest)
     {
         return new UserChangeRequestDto(
                 userChangeRequest.username(),

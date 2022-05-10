@@ -17,6 +17,11 @@ class UserService {
 
     public UserResponseDto saveUser(UserRequestDto userRequestDto) {
 
+        if(userRepository.findByUsername(userRequestDto.username()).isPresent())
+        {
+            throw new EntityNotFoundException("Podany login jest już zajęty", 500);
+        }
+
         return userRepository.saveUser(userRequestDto);
     }
 

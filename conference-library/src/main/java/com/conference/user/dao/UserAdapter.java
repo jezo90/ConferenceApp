@@ -31,9 +31,14 @@ class UserAdapter implements UserRepository {
     }
 
     @Override
-    public UserResponseDto changeNickname(UserChangeRequestDto userChangeRequestDto) {
+    public UserResponseDto changeNickname(UserDto userDto) {
         return userEntityMapper.map(
                 userSpringRepository.save(
-                        userEntityMapper.map(userChangeRequestDto)));
+                        userEntityMapper.map(userDto)));
+    }
+
+    @Override
+    public Optional<Long> findIdByUsernameAndEmail(String username, String email) {
+        return userSpringRepository.findByUsernameAndEmail(username, email);
     }
 }

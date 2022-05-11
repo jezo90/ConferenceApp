@@ -32,10 +32,11 @@ public class UserEntityMapper {
         );
     }
 
-    public UserEntity map(UserChangeRequestDto userChangeRequestDto) {
+    public UserEntity map(UserDto userDto) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(userChangeRequestDto.username());
-        userEntity.setEmail(userChangeRequestDto.newEmail());
+        userEntity.setId(userDto.id());
+        userEntity.setUsername(userDto.username());
+        userEntity.setEmail(userDto.email());
 
         return userEntity;
     }

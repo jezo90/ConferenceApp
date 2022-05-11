@@ -5,4 +5,8 @@ public record UserDto(
         String username,
         String email
 ) {
+    public UserDto setEmail(String newEmail)
+    {
+        return new UserDto(id, username, newEmail);
+    }
 }

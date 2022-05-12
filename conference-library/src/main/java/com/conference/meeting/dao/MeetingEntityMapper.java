@@ -5,10 +5,7 @@ import com.conference.meeting.dto.MeetingRegisterDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 import com.conference.user.dao.UserEntity;
 
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.OffsetTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 public class MeetingEntityMapper {
@@ -42,11 +39,10 @@ public class MeetingEntityMapper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         try {
             LocalTime localTime = LocalTime.parse(time, formatter);
-            ZoneId zoneId = ZoneId.of("Europe/Warsaw");
-            return OffsetTime.of(localTime, zoneId.getRules().getOffset(Instant.from(LocalTime.parse(time, formatter))));
+            return OffsetTime.of(localTime, ZoneId.of("Europe/Warsaw").getRules().getOffset(LocalDateTime.now()));
         } catch (Exception exception) {
             throw new CustomException("Nieprawidłowy format czasu. " +
-                    "Prawidłowy pattern: HH:mm:" +
+                    "Prawidłowy pattern: HH:mm: " +
                     "przykład: 10:00", 500);
         }
     }

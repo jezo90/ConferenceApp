@@ -39,6 +39,6 @@ class UserAdapter implements UserRepository {
 
     @Override
     public Optional<Long> findIdByUsernameAndEmail(String username, String email) {
-        return userSpringRepository.findByUsernameAndEmail(username, email);
+        return userSpringRepository.findByUsernameAndEmail(username, email).map(UserEntity::getId);
     }
 }

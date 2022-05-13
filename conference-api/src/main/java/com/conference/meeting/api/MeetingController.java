@@ -35,7 +35,7 @@ public class MeetingController {
     }
 
     @GetMapping("/{login}")
-    public ResponseEntity<List<MeetingResponse>> getUserMeetings(@PathVariable("login") String login)
+    public ResponseEntity<List<MeetingResponse>> UserMeetings(@PathVariable("login") String login)
     {
         return ResponseEntity.ok(
                 meetingComponent.getUserMeetings(login)
@@ -51,8 +51,12 @@ public class MeetingController {
                                 meetingMapper.map(meetingRequest))));
     }
 
+    @DeleteMapping("/remove")
+    public ResponseEntity<String> removeMeeting(@RequestBody MeetingRequest meetingRequest)
+    {
+        meetingComponent.removeMeeting(meetingMapper.map(meetingRequest));
 
-
-
+        return ResponseEntity.ok("Poprawnie wypisano z prelekcji");
+    }
 
 }

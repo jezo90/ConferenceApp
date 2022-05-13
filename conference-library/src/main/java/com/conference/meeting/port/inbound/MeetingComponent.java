@@ -8,4 +8,5 @@ import java.util.List;
 public interface MeetingComponent {
     List<MeetingResponseDto> getUserMeetings(String login);
     MeetingResponseDto registerMeeting(MeetingRequestDto meetingRequestDto);
+    void removeMeeting(MeetingRequestDto meetingRequestDto);
 }

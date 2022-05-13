@@ -1,7 +1,6 @@
 package com.conference.meeting.dao;
 
-import com.conference.meeting.dto.MeetingRegisterDto;
-import com.conference.meeting.dto.MeetingRequestDto;
+import com.conference.meeting.dto.MeetingDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 import com.conference.meeting.port.outbound.MeetingRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,14 +29,25 @@ class MeetingAdapter implements MeetingRepository {
     }
 
     @Override
-    public MeetingResponseDto registerMeeting(MeetingRegisterDto meetingRegisterDto, Long userId) {
+    public MeetingResponseDto registerMeeting(MeetingDto meetingDto) {
         return meetingEntityMapper.map(
                 meetingSpringRepository.save(
-                        meetingEntityMapper.map(meetingRegisterDto, userId)));
+                        meetingEntityMapper.map(meetingDto)));
     }
 
     @Override
     public Long countByTopicId(Long topicId) {
         return meetingSpringRepository.countByTopicId(topicId);
+    }
+
+    @Override
+    public Optional<Long> findIdByUsernameAndTopicId(String username, Long topicId) {
+        return meetingSpringRepository.findByUserEntityUsernameAndTopicId(username,topicId)
+                .map(MeetingEntity::getId);
+    }
+
+    @Override
+    public void removeMeeting(Long meetingId) {
+        meetingSpringRepository.deleteById(meetingId);
     }
 }

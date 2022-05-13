@@ -12,4 +12,5 @@ public interface MeetingSpringRepository extends JpaRepository<MeetingEntity, Lo
     List<MeetingEntity> findByUserEntityUsername(String login);
     Optional<MeetingEntity> findByUserEntityUsernameAndTime(String username, OffsetTime time);
     Long countByTopicId(Long topicId);
+    Optional<MeetingEntity> findByUserEntityUsernameAndTopicId(String username, Long topicId);
 }

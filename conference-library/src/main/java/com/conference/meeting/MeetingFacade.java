@@ -20,4 +20,9 @@ class MeetingFacade implements MeetingComponent {
     public MeetingResponseDto registerMeeting(MeetingRequestDto meetingRequestDto) {
         return meetingService.registerMeeting(meetingRequestDto);
     }
+
+    @Override
+    public void removeMeeting(MeetingRequestDto meetingRequestDto) {
+        meetingService.removeMeeting(meetingRequestDto);
+    }
 }

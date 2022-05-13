@@ -1,7 +1,7 @@
 package com.conference.meeting.dao;
 
 import com.conference.exception.CustomException;
-import com.conference.meeting.dto.MeetingRegisterDto;
+import com.conference.meeting.dto.MeetingDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 import com.conference.user.dao.UserEntity;
 
@@ -18,14 +18,14 @@ public class MeetingEntityMapper {
         );
     }
 
-    public MeetingEntity map(MeetingRegisterDto meetingRegisterDto, Long userId) {
+    public MeetingEntity map(MeetingDto meetingDto) {
         MeetingEntity meetingEntity = new MeetingEntity();
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId);
+        userEntity.setId(meetingDto.userId());
 
         meetingEntity.setUserEntity(userEntity);
-        meetingEntity.setTime(meetingRegisterDto.time());
-        meetingEntity.setTopicId(meetingRegisterDto.topicId());
+        meetingEntity.setTime(meetingDto.time());
+        meetingEntity.setTopicId(meetingDto.topicId());
 
         return meetingEntity;
     }

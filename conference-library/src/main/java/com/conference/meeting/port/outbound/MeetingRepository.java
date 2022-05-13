@@ -1,6 +1,6 @@
 package com.conference.meeting.port.outbound;
 
-import com.conference.meeting.dto.MeetingRegisterDto;
+import com.conference.meeting.dto.MeetingDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 
 import java.time.OffsetTime;
@@ -12,7 +12,11 @@ public interface MeetingRepository {
 
     Optional<MeetingResponseDto> findByUsernameAndTime(String username, OffsetTime time);
 
-    MeetingResponseDto registerMeeting(MeetingRegisterDto meetingRegisterDto, Long userId);
+    MeetingResponseDto registerMeeting(MeetingDto meetingDto);
 
     Long countByTopicId(Long topicId);
+
+    Optional<Long> findIdByUsernameAndTopicId(String username, Long topicId);
+
+    void removeMeeting(Long meetingId);
 }

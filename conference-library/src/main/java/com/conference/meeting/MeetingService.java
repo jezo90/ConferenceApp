@@ -62,8 +62,7 @@ class MeetingService {
                         " nie jest powiązany z emailem " + email, 500));
     }
 
-    private MeetingDto createMeeting(Long userId, MeetingRequestDto meetingRequestDto)
-    {
+    private MeetingDto createMeeting(Long userId, MeetingRequestDto meetingRequestDto) {
         return new MeetingDto(
                 userId,
                 meetingRequestDto.username(),
@@ -71,7 +70,6 @@ class MeetingService {
                 meetingEntityMapper.topicToTime(meetingRequestDto.topicId()),
                 meetingRequestDto.topicId());
     }
-
 
     private void checkIfCanParticipate(String username, OffsetTime time) {
         if (meetingRepository.findByUsernameAndTime(username, time).isPresent())
@@ -92,8 +90,7 @@ class MeetingService {
         meetingRepository.removeMeeting(meetingId);
     }
 
-    private Long getIdIfParticipate(String username, Long topicId)
-    {
+    private Long getIdIfParticipate(String username, Long topicId) {
         return meetingRepository.findIdByUsernameAndTopicId(username, topicId)
                 .orElseThrow(() -> new CustomException("Użytkownik o loginie " + username +
                         " nie jest zapisany prelekcję o id " + topicId, 500));
@@ -103,8 +100,7 @@ class MeetingService {
         return calculateMeetingStats(meetingRepository.generateMeetingStats(), generateTimes());
     }
 
-    private List<OffsetTime> generateTimes()
-    {
+    private List<OffsetTime> generateTimes() {
         ZoneOffset zoneOffset = ZoneId.of("Europe/Warsaw").getRules().getOffset(LocalDateTime.now());
 
         return Arrays.asList(
@@ -113,22 +109,63 @@ class MeetingService {
                 OffsetTime.of(14,0,0,0,zoneOffset));
     }
 
-    private List<MeetingStatsDto> calculateMeetingStats(List<MeetingDetailsDto> meetingDetailsDtoList, List<OffsetTime> times)
-    {
+    private List<MeetingStatsDto> calculateMeetingStats(List<MeetingDetailsDto> meetingDetailsDtoList, List<OffsetTime> times) {
         List<MeetingStatsDto> meetingStatsDtoList = new ArrayList<>();
         Long users;
+
         for (OffsetTime time: times) {
-            users = meetingDetailsDtoList.stream()
-                    .filter(meetingDetailsDto ->
-                            meetingDetailsDto.time().equals(time)).count();
+            users = getUserCount(meetingDetailsDtoList, time);
+
             meetingStatsDtoList.add(
-                    new MeetingStatsDto(
-                            time,
-                            users,
-                            users/5D*100)
+                    new MeetingStatsDto(time, users, users/5D*100)
             );
         }
         return meetingStatsDtoList;
+    }
+
+    private long getUserCount(List<MeetingDetailsDto> meetingDetailsDtoList, OffsetTime time) {
+        return meetingDetailsDtoList.stream().filter(meetingDetailsDto ->
+                meetingDetailsDto.time().equals(time)).count();
+    }
+
+    public List<MeetingTopicStatsDto> generateTopicStats() {
+        return calculateTopicStats(
+                meetingRepository.generateMeetingStats(),
+                Arrays.asList(1L,2L,3L,4L,5L,6L,7L,8L,9L));
+    }
+
+    private List<MeetingTopicStatsDto> calculateTopicStats(List<MeetingDetailsDto> meetingDetailsDtoList, List<Long> ids)
+    {
+        List<MeetingTopicStatsDto> meetingTopicStatsDtos = new ArrayList<>();
+        Long users, usersTime;
+        for (Long id: ids) {
+            List<MeetingDetailsDto> usersFiltered = meetingFilterById(meetingDetailsDtoList, id);
+            OffsetTime time = getTime(usersFiltered);
+            users = (long) usersFiltered.size();
+            usersTime = getUserCount(meetingDetailsDtoList, time);
+            if(usersTime==0) usersTime=1L;
+
+            meetingTopicStatsDtos.add(
+                    new MeetingTopicStatsDto(
+                            users,
+                            id,
+                            users*100D/usersTime
+                    )
+            );
+        }
+        return meetingTopicStatsDtos;
+    }
+
+    private OffsetTime getTime(List<MeetingDetailsDto> usersFiltered) {
+        return usersFiltered.stream()
+                .findFirst().map(MeetingDetailsDto::time)
+                .orElse(OffsetTime.of(0, 0, 0, 0, ZoneId.of("Europe/Warsaw").getRules().getOffset(LocalDateTime.now())));
+    }
+
+    private List<MeetingDetailsDto> meetingFilterById(List<MeetingDetailsDto> meetingDetailsDtoList, Long id) {
+        return meetingDetailsDtoList
+                .stream().filter(meetingDetailsDto ->
+                        meetingDetailsDto.topicId().equals(id)).toList();
     }
 
 }

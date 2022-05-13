@@ -3,6 +3,7 @@ package com.conference.meeting;
 import com.conference.meeting.dto.MeetingRequestDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 import com.conference.meeting.dto.MeetingStatsDto;
+import com.conference.meeting.dto.MeetingTopicStatsDto;
 import com.conference.meeting.port.inbound.MeetingComponent;
 import lombok.RequiredArgsConstructor;
 
@@ -30,5 +31,10 @@ class MeetingFacade implements MeetingComponent {
     @Override
     public List<MeetingStatsDto> generateMeetingStats() {
         return meetingService.generateMeetingStats();
+    }
+
+    @Override
+    public List<MeetingTopicStatsDto> generateTopicStats() {
+        return meetingService.generateTopicStats();
     }
 }

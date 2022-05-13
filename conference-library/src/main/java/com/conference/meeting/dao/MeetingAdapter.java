@@ -56,4 +56,5 @@ class MeetingAdapter implements MeetingRepository {
     public List<MeetingDetailsDto> generateMeetingStats() {
         return meetingSpringRepository.findAll().stream().map(meetingEntityMapper::mapToDetails).toList();
     }
+
 }

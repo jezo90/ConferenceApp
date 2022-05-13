@@ -5,6 +5,7 @@ import com.conference.meeting.mapper.MeetingMapper;
 import com.conference.meeting.model.MeetingRequest;
 import com.conference.meeting.model.MeetingResponse;
 import com.conference.meeting.model.MeetingStats;
+import com.conference.meeting.model.MeetingTopicStats;
 import com.conference.meeting.port.inbound.MeetingComponent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +67,14 @@ public class MeetingController {
         return ResponseEntity.ok(
                 meetingComponent.generateMeetingStats()
                 .stream().map(meetingMapper::map).toList());
+    }
+
+    @GetMapping("/topicStats")
+    public ResponseEntity<List<MeetingTopicStats>> generateTopicStats()
+    {
+        return ResponseEntity.ok(
+                meetingComponent.generateTopicStats()
+                        .stream().map(meetingMapper::map).toList());
     }
 
 }

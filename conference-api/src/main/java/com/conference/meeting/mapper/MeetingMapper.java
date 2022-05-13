@@ -3,9 +3,11 @@ package com.conference.meeting.mapper;
 import com.conference.meeting.dto.MeetingRequestDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 import com.conference.meeting.dto.MeetingStatsDto;
+import com.conference.meeting.dto.MeetingTopicStatsDto;
 import com.conference.meeting.model.MeetingRequest;
 import com.conference.meeting.model.MeetingResponse;
 import com.conference.meeting.model.MeetingStats;
+import com.conference.meeting.model.MeetingTopicStats;
 
 public class MeetingMapper {
 
@@ -39,6 +41,15 @@ public class MeetingMapper {
                 meetingStatsDto.time(),
                 meetingStatsDto.users(),
                 meetingStatsDto.participation()
+        );
+    }
+
+    public MeetingTopicStats map(MeetingTopicStatsDto meetingTopicStatsDto)
+    {
+        return new MeetingTopicStats(
+                meetingTopicStatsDto.users(),
+                meetingTopicStatsDto.topicId(),
+                meetingTopicStatsDto.participation()
         );
     }
 

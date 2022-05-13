@@ -8,9 +8,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.format.DateTimeFormatter;
 
-public class MeetingSaveToFile {
+public class MeetingFileHandler {
 
-    public void meetingDtoToFile(MeetingDto meetingDto) {
+    public void saveToFile(MeetingDto meetingDto) {
         try {
             String register = "Zapisano użytkownika " + meetingDto.username()
                     + " na godzinę " + meetingDto.time().format(DateTimeFormatter.ofPattern("HH:mm"))

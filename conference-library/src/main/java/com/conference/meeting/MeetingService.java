@@ -2,7 +2,7 @@ package com.conference.meeting;
 
 import com.conference.exception.CustomException;
 import com.conference.meeting.dao.MeetingEntityMapper;
-import com.conference.meeting.dao.MeetingSaveToFile;
+import com.conference.meeting.dao.MeetingFileHandler;
 import com.conference.meeting.dto.MeetingDto;
 import com.conference.meeting.dto.MeetingRequestDto;
 import com.conference.meeting.dto.MeetingResponseDto;
@@ -21,7 +21,7 @@ class MeetingService {
     private final MeetingRepository meetingRepository;
     private final UserRepository userRepository;
     private final MeetingEntityMapper meetingEntityMapper = new MeetingEntityMapper();
-    private final MeetingSaveToFile meetingSaveToFile = new MeetingSaveToFile();
+    private final MeetingFileHandler meetingFileHandler = new MeetingFileHandler();
 
     public List<MeetingResponseDto> getUserMeetings(String login) {
 
@@ -39,19 +39,14 @@ class MeetingService {
         Long userId = getUserIdIfExist(meetingRequestDto.username(),
                 meetingRequestDto.email());
 
-        MeetingDto meetingDto = new MeetingDto(
-                userId,
-                meetingRequestDto.username(),
-                meetingRequestDto.email(),
-                meetingEntityMapper.topicToTime(meetingRequestDto.topicId()),
-                meetingRequestDto.topicId());
+        MeetingDto meetingDto = createMeeting(userId, meetingRequestDto);
 
         checkIfCanParticipate(meetingDto.username(),
                 meetingDto.time());
 
         checkIfFreeSpot(meetingDto.topicId());
 
-        meetingSaveToFile.meetingDtoToFile(meetingDto);
+        meetingFileHandler.saveToFile(meetingDto);
 
         return meetingRepository.registerMeeting(meetingDto);
     }
@@ -61,6 +56,17 @@ class MeetingService {
                 .orElseThrow(() -> new CustomException("Użytkownik o loginie " + username +
                         " nie jest powiązany z emailem " + email, 500));
     }
+
+    private MeetingDto createMeeting(Long userId, MeetingRequestDto meetingRequestDto)
+    {
+        return new MeetingDto(
+                userId,
+                meetingRequestDto.username(),
+                meetingRequestDto.email(),
+                meetingEntityMapper.topicToTime(meetingRequestDto.topicId()),
+                meetingRequestDto.topicId());
+    }
+
 
     private void checkIfCanParticipate(String username, OffsetTime time) {
         if (meetingRepository.findByUsernameAndTime(username, time).isPresent())

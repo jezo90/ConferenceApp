@@ -18,7 +18,6 @@ public class UserMapper {
     public UserResponse map(UserResponseDto userResponseDto)
     {
         return new UserResponse(
-                userResponseDto.id(),
                 userResponseDto.username(),
                 userResponseDto.email()
         );

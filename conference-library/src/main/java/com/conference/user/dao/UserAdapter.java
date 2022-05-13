@@ -8,6 +8,7 @@ import com.conference.user.port.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -31,7 +32,7 @@ class UserAdapter implements UserRepository {
     }
 
     @Override
-    public UserResponseDto changeNickname(UserDto userDto) {
+    public UserResponseDto changeEmail(UserDto userDto) {
         return userEntityMapper.map(
                 userSpringRepository.save(
                         userEntityMapper.map(userDto)));
@@ -40,5 +41,10 @@ class UserAdapter implements UserRepository {
     @Override
     public Optional<Long> findIdByUsernameAndEmail(String username, String email) {
         return userSpringRepository.findByUsernameAndEmail(username, email).map(UserEntity::getId);
+    }
+
+    @Override
+    public List<UserResponseDto> getAllUsers() {
+        return userSpringRepository.findAll().stream().map(userEntityMapper::map).toList();
     }
 }

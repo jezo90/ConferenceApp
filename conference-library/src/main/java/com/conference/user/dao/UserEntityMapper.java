@@ -1,6 +1,5 @@
 package com.conference.user.dao;
 
-import com.conference.user.dto.UserChangeRequestDto;
 import com.conference.user.dto.UserDto;
 import com.conference.user.dto.UserRequestDto;
 import com.conference.user.dto.UserResponseDto;
@@ -9,7 +8,6 @@ public class UserEntityMapper {
 
     public UserResponseDto map(UserEntity userEntity) {
         return new UserResponseDto(
-                userEntity.getId(),
                 userEntity.getUsername(),
                 userEntity.getEmail()
         );
@@ -23,8 +21,7 @@ public class UserEntityMapper {
         return userEntity;
     }
 
-    public UserDto mapToDto(UserEntity userEntity)
-    {
+    public UserDto mapToDto(UserEntity userEntity) {
         return new UserDto(
                 userEntity.getId(),
                 userEntity.getUsername(),

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")
@@ -26,10 +28,19 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    ResponseEntity<UserResponse> add(@RequestBody UserChangeRequest userChangeRequest) {
+    ResponseEntity<UserResponse> update(@RequestBody UserChangeRequest userChangeRequest) {
         return ResponseEntity.ok(
                 userMapper.map(
-                        userComponent.changeNickname(
+                        userComponent.changeEmail(
                                 userMapper.map(userChangeRequest))));
     }
+
+    @GetMapping("/all")
+    ResponseEntity<List<UserResponse>> allUsers()
+    {
+        return ResponseEntity.ok(
+                userComponent.getAllUsers()
+                        .stream().map(userMapper::map).toList());
+    }
+
 }

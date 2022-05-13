@@ -6,6 +6,8 @@ import com.conference.user.dto.UserResponseDto;
 import com.conference.user.port.inbound.UserComponent;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 class UserFacade implements UserComponent {
     private final UserService userService;
@@ -17,7 +19,12 @@ class UserFacade implements UserComponent {
     }
 
     @Override
-    public UserResponseDto changeNickname(UserChangeRequestDto userChangeRequestDto) {
-        return userService.changeNickname(userChangeRequestDto);
+    public UserResponseDto changeEmail(UserChangeRequestDto userChangeRequestDto) {
+        return userService.changeEmail(userChangeRequestDto);
+    }
+
+    @Override
+    public List<UserResponseDto> getAllUsers() {
+        return userService.getAllUsers();
     }
 }

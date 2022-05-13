@@ -11,6 +11,7 @@ import com.conference.user.port.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -23,13 +24,13 @@ class MeetingService {
 
     public List<MeetingResponseDto> getUserMeetings(String login) {
 
-        List<MeetingResponseDto> meetingResponseDtos = meetingRepository.getUserMeetings(login);
+        List<MeetingResponseDto> meetingResponseDtoList = meetingRepository.getUserMeetings(login);
 
-        if (meetingResponseDtos.isEmpty())
+        if (meetingResponseDtoList.isEmpty())
             throw new CustomException("Użytkownik o podanym loginie nie bierze udział w żadnej prelekcji", 500);
 
 
-        return meetingResponseDtos;
+        return meetingResponseDtoList;
     }
 
     public MeetingResponseDto registerMeeting(MeetingRequestDto meetingRequestDto) {
@@ -37,7 +38,7 @@ class MeetingService {
         MeetingRegisterDto meetingRegisterDto = new MeetingRegisterDto(
                 meetingRequestDto.username(),
                 meetingRequestDto.email(),
-                meetingEntityMapper.stringToOffsetTime(meetingRequestDto.time()),
+                meetingEntityMapper.topicToTime(meetingRequestDto.topicId()),
                 meetingRequestDto.topicId());
 
         Long userId = userRepository.findIdByUsernameAndEmail(meetingRequestDto.username(), meetingRequestDto.email())
@@ -46,7 +47,7 @@ class MeetingService {
 
         if (meetingRepository.findByUsernameAndTime(meetingRequestDto.username(), meetingRegisterDto.time()).isPresent())
             throw new CustomException("Użytkownik o loginie " + meetingRegisterDto.username() +
-                    " jest już zapisany na prelekcję o godzinie " + meetingRequestDto.time(), 500);
+                    " jest już zapisany na prelekcję o godzinie " + meetingRegisterDto.time().format(DateTimeFormatter.ofPattern("HH:mm")), 500);
 
         if (meetingRepository.countByTopicId(meetingRequestDto.topicId()) >= 5)
             throw new CustomException("Brak wolnych miejsc na tę ścieżkę tematyczną", 500);
@@ -55,6 +56,4 @@ class MeetingService {
 
         return meetingRepository.registerMeeting(meetingRegisterDto, userId);
     }
-
-
 }

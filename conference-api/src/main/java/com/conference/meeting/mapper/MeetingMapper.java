@@ -27,7 +27,6 @@ public class MeetingMapper {
         return new MeetingRequestDto(
                 meetingRequest.username(),
                 meetingRequest.email(),
-                meetingRequest.time(),
                 meetingRequest.topicId()
         );
     }

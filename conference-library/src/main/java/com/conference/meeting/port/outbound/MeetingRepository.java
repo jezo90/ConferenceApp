@@ -1,7 +1,9 @@
 package com.conference.meeting.port.outbound;
 
+import com.conference.meeting.dto.MeetingDetailsDto;
 import com.conference.meeting.dto.MeetingDto;
 import com.conference.meeting.dto.MeetingResponseDto;
+import com.conference.meeting.dto.MeetingStatsDto;
 
 import java.time.OffsetTime;
 import java.util.List;
@@ -14,9 +16,11 @@ public interface MeetingRepository {
 
     MeetingResponseDto registerMeeting(MeetingDto meetingDto);
 
-    Long countByTopicId(Long topicId);
+    Long countByTime(OffsetTime offsetTime);
 
     Optional<Long> findIdByUsernameAndTopicId(String username, Long topicId);
 
     void removeMeeting(Long meetingId);
+
+    List<MeetingDetailsDto> generateMeetingStats();
 }

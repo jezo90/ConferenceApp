@@ -4,6 +4,7 @@ package com.conference.meeting.api;
 import com.conference.meeting.mapper.MeetingMapper;
 import com.conference.meeting.model.MeetingRequest;
 import com.conference.meeting.model.MeetingResponse;
+import com.conference.meeting.model.MeetingStats;
 import com.conference.meeting.port.inbound.MeetingComponent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -57,6 +58,14 @@ public class MeetingController {
         meetingComponent.removeMeeting(meetingMapper.map(meetingRequest));
 
         return ResponseEntity.ok("Poprawnie wypisano z prelekcji");
+    }
+
+    @GetMapping("/stats")
+    public ResponseEntity<List<MeetingStats>> generateMeetingStats()
+    {
+        return ResponseEntity.ok(
+                meetingComponent.generateMeetingStats()
+                .stream().map(meetingMapper::map).toList());
     }
 
 }

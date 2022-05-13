@@ -1,6 +1,7 @@
 package com.conference.meeting.dao;
 
 import com.conference.exception.CustomException;
+import com.conference.meeting.dto.MeetingDetailsDto;
 import com.conference.meeting.dto.MeetingDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 import com.conference.user.dao.UserEntity;
@@ -49,5 +50,12 @@ public class MeetingEntityMapper {
             return OffsetTime.of(14, 0, 0, 0, zoneOffset);
 
         throw new CustomException("Nieprawidłowy numer prelekcji. ", 500);
+    }
+
+    public MeetingDetailsDto mapToDetails(MeetingEntity meetingEntity)
+    {
+        return new MeetingDetailsDto(
+                meetingEntity.getTime(),
+                meetingEntity.getTopicId());
     }
 }

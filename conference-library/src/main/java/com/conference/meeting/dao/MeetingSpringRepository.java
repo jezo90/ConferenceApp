@@ -11,6 +11,6 @@ import java.util.Optional;
 public interface MeetingSpringRepository extends JpaRepository<MeetingEntity, Long> {
     List<MeetingEntity> findByUserEntityUsername(String login);
     Optional<MeetingEntity> findByUserEntityUsernameAndTime(String username, OffsetTime time);
-    Long countByTopicId(Long topicId);
+    Long countByTime(OffsetTime offsetTime);
     Optional<MeetingEntity> findByUserEntityUsernameAndTopicId(String username, Long topicId);
 }

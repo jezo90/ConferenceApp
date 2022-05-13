@@ -2,8 +2,10 @@ package com.conference.meeting.mapper;
 
 import com.conference.meeting.dto.MeetingRequestDto;
 import com.conference.meeting.dto.MeetingResponseDto;
+import com.conference.meeting.dto.MeetingStatsDto;
 import com.conference.meeting.model.MeetingRequest;
 import com.conference.meeting.model.MeetingResponse;
+import com.conference.meeting.model.MeetingStats;
 
 public class MeetingMapper {
 
@@ -28,6 +30,15 @@ public class MeetingMapper {
                 meetingRequest.username(),
                 meetingRequest.email(),
                 meetingRequest.topicId()
+        );
+    }
+
+    public MeetingStats map(MeetingStatsDto meetingStatsDto)
+    {
+        return new MeetingStats(
+                meetingStatsDto.time(),
+                meetingStatsDto.users(),
+                meetingStatsDto.participation()
         );
     }
 

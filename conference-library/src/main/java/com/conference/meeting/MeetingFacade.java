@@ -2,6 +2,7 @@ package com.conference.meeting;
 
 import com.conference.meeting.dto.MeetingRequestDto;
 import com.conference.meeting.dto.MeetingResponseDto;
+import com.conference.meeting.dto.MeetingStatsDto;
 import com.conference.meeting.port.inbound.MeetingComponent;
 import lombok.RequiredArgsConstructor;
 
@@ -24,5 +25,10 @@ class MeetingFacade implements MeetingComponent {
     @Override
     public void removeMeeting(MeetingRequestDto meetingRequestDto) {
         meetingService.removeMeeting(meetingRequestDto);
+    }
+
+    @Override
+    public List<MeetingStatsDto> generateMeetingStats() {
+        return meetingService.generateMeetingStats();
     }
 }

@@ -1,5 +1,6 @@
 package com.conference.meeting.dao;
 
+import com.conference.meeting.dto.MeetingDetailsDto;
 import com.conference.meeting.dto.MeetingDto;
 import com.conference.meeting.dto.MeetingResponseDto;
 import com.conference.meeting.port.outbound.MeetingRepository;
@@ -36,18 +37,23 @@ class MeetingAdapter implements MeetingRepository {
     }
 
     @Override
-    public Long countByTopicId(Long topicId) {
-        return meetingSpringRepository.countByTopicId(topicId);
+    public Long countByTime(OffsetTime offsetTime) {
+        return meetingSpringRepository.countByTime(offsetTime);
     }
 
     @Override
     public Optional<Long> findIdByUsernameAndTopicId(String username, Long topicId) {
-        return meetingSpringRepository.findByUserEntityUsernameAndTopicId(username,topicId)
+        return meetingSpringRepository.findByUserEntityUsernameAndTopicId(username, topicId)
                 .map(MeetingEntity::getId);
     }
 
     @Override
     public void removeMeeting(Long meetingId) {
         meetingSpringRepository.deleteById(meetingId);
+    }
+
+    @Override
+    public List<MeetingDetailsDto> generateMeetingStats() {
+        return meetingSpringRepository.findAll().stream().map(meetingEntityMapper::mapToDetails).toList();
     }
 }

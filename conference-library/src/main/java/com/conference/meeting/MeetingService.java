@@ -3,17 +3,22 @@ package com.conference.meeting;
 import com.conference.exception.CustomException;
 import com.conference.meeting.dao.MeetingEntityMapper;
 import com.conference.meeting.dao.MeetingFileHandler;
-import com.conference.meeting.dto.MeetingDto;
-import com.conference.meeting.dto.MeetingRequestDto;
-import com.conference.meeting.dto.MeetingResponseDto;
+import com.conference.meeting.dto.*;
 import com.conference.meeting.port.outbound.MeetingRepository;
 import com.conference.user.port.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.OffsetTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -44,7 +49,7 @@ class MeetingService {
         checkIfCanParticipate(meetingDto.username(),
                 meetingDto.time());
 
-        checkIfFreeSpot(meetingDto.topicId());
+        checkIfFreeSpot(meetingDto.time());
 
         meetingFileHandler.saveToFile(meetingDto);
 
@@ -74,9 +79,9 @@ class MeetingService {
                     " jest już zapisany na prelekcję o godzinie " + time.format(DateTimeFormatter.ofPattern("HH:mm")), 500);
     }
 
-    private void checkIfFreeSpot(Long topicId) {
-        if (meetingRepository.countByTopicId(topicId) >= 5)
-            throw new CustomException("Brak wolnych miejsc na tę ścieżkę tematyczną", 500);
+    private void checkIfFreeSpot(OffsetTime offsetTime) {
+        if (meetingRepository.countByTime(offsetTime) >= 5)
+            throw new CustomException("Brak wolnych miejsc na tę prelekcję", 500);
     }
 
     public void removeMeeting(MeetingRequestDto meetingRequestDto) {
@@ -94,5 +99,36 @@ class MeetingService {
                         " nie jest zapisany prelekcję o id " + topicId, 500));
     }
 
+    public List<MeetingStatsDto> generateMeetingStats() {
+        return calculateMeetingStats(meetingRepository.generateMeetingStats(), generateTimes());
+    }
+
+    private List<OffsetTime> generateTimes()
+    {
+        ZoneOffset zoneOffset = ZoneId.of("Europe/Warsaw").getRules().getOffset(LocalDateTime.now());
+
+        return Arrays.asList(
+                OffsetTime.of(10,0,0,0,zoneOffset),
+                OffsetTime.of(12,0,0,0,zoneOffset),
+                OffsetTime.of(14,0,0,0,zoneOffset));
+    }
+
+    private List<MeetingStatsDto> calculateMeetingStats(List<MeetingDetailsDto> meetingDetailsDtoList, List<OffsetTime> times)
+    {
+        List<MeetingStatsDto> meetingStatsDtoList = new ArrayList<>();
+        Long users;
+        for (OffsetTime time: times) {
+            users = meetingDetailsDtoList.stream()
+                    .filter(meetingDetailsDto ->
+                            meetingDetailsDto.time().equals(time)).count();
+            meetingStatsDtoList.add(
+                    new MeetingStatsDto(
+                            time,
+                            users,
+                            users/5D*100)
+            );
+        }
+        return meetingStatsDtoList;
+    }
 
 }
